@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace MyHashMap
 {
-    public class MyMapNode<K, V>
+    public class MyMapNode<K, V> // K,V used because I have to build a Key Value in Hash Table.
     {
-        //this method is for passing Keyvalues in linkedlist, m,n are data types
-        public struct KeyValue<m, n>
+        //this method is for passing Keyvalues in linkedlist k,v are data types
+        //Created a class for key,value pair.
+        public struct KeyValue<k, v>
         {
-            public m Key { get; set; }
-            public n Value { get; set; }
+            public k Key { get; set; }
+            public v Value { get; set; }
         }
         private readonly int size;
-        private readonly LinkedList<KeyValue<K, V>>[] items;
+        private readonly LinkedList<KeyValue<K, V>>[] items; 
 
-        //Constructor to initialize 
+        //created a Constructor to initialize the variables.
         public MyMapNode(int size)
         {
-            this.size = size;
+            this.size = size; //this- is used to refer current class variables.
             this.items = new LinkedList<KeyValue<K, V>>[size];
         }
 
@@ -28,12 +29,15 @@ namespace MyHashMap
         protected int GetArrayPosition(K Key)
         {
             int hash = Key.GetHashCode();
+
+            //%---> will give th mod value. So I used Math.Abs to find the interger of it.
             int position = hash % size;
             return Math.Abs(position);
         }
 
-        //method to get a value stored in perticular key
-        public V Get(K Key)
+        //method to get a value stored in particular key
+        // It is to Identify the array position at what Index particular key is located.
+        public V Get(K Key) // Its a Generic method.
         {
             int position = GetArrayPosition(Key);
 
@@ -48,14 +52,12 @@ namespace MyHashMap
             return default(V);
         }
 
-        //Add method for insert value in hashtable
+        //method for to add values in hashtable
+        //It is just performing the operation.Iam just pushing the data into the hashtable using linked list operation.
         public void Add(K key, V value)
         {
             int position = GetArrayPosition(key);
             LinkedList<KeyValue<K, V>> linkedList = GetLinkedList(position);
-            //object of keyvalue
-            //object initialization(declaration and initialiation at a one time)
-            //It doesnot invoke constructor
             KeyValue<K, V> item = new KeyValue<K, V>()
             //assign values to Key and Value
             { Key = key, Value = value };
@@ -73,6 +75,7 @@ namespace MyHashMap
             linkedList.AddLast(item);
         }
 
+        //created a method to find the exist key in particular position.
         public bool ExistKey(K key)
         {
             int position = GetArrayPosition(key);
@@ -87,7 +90,8 @@ namespace MyHashMap
             return false;
         }
 
-        //Method to remove a value from hashtable
+        //Method to remove  entry (value) from  a hashtable 
+        // It is just removing particular entry in the hashtable
         public void Remove(K key)
         {
             int position = GetArrayPosition(key);
@@ -104,12 +108,11 @@ namespace MyHashMap
                 if (itemFound)
                 {
                     linkedList.Remove(foundItem);
-                    //Console.WriteLine("Removed successfully with key" + foundItem.Key);
                     break;
                 }
             }
         }
-        //method to create a linkedlist,store values in it 
+        //GetLinkedList method to create a linkedlist and store the values in that list. 
         protected LinkedList<KeyValue<K, V>> GetLinkedList(int position)
         {
             LinkedList<KeyValue<K, V>> linkedList = items[position];
@@ -121,7 +124,7 @@ namespace MyHashMap
             return linkedList;
         }
 
-        //method to display frequencies of word
+        // CountFrequency method is to count the frequencies of word in hash table.
         public void CountFrequency(string sentence)
         {
             MyMapNode<string, int> myHashTable = new MyMapNode<string, int>(10);
@@ -137,10 +140,11 @@ namespace MyHashMap
                     myHashTable.Add(word, 1);
                 }
             }
-            Console.WriteLine("Displaying the frequencies of words");
+            Console.WriteLine("Display frequencies of words");
             myHashTable.Display();
         }
 
+        //method to display the elements in the hash table.
         public void Display()
         {
             foreach (var linkedList in items)
